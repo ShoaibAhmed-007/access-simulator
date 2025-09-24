@@ -2,41 +2,41 @@
 # Access Grid Simulator
 
 Internship Assessment Project — Innovaxel (Fall 2025)  
-Simulates employee access to secure rooms based on **access level, room timings, and cooldown rules**.
-
+Simulates employee access to secure rooms based on access level, room timings, and cooldown rules.
+````
 ## Setup
 
 ### 1. Clone Repo
 
 ```bash
-git clone https://github.com/<your-username>/access-simulator.git
+git clone https://github.com/ShoaibAhmed-007/access-simulator.git
 cd access-simulator
 ```
-````
+
 
 ### 2. Backend
 
 ```bash
 cd backend
 npm install
-node server.js
+nodemon server.js
 ```
 
-Runs at `http://localhost:5000`
+Runs at `http://localhost:3000`
 
 ### 3. Frontend
 
 ```bash
 cd frontend
 npm install
-npm start
+npm run dev
 ```
 
-Runs at `http://localhost:3000`
+Runs at `http://localhost:5173`
 
 ## Usage
 
-1. Open `http://localhost:3000`
+1. Open `http://localhost:5173`
 2. View employee requests in table
 3. Click **Simulate Access** → results with Granted/Denied + reason appear
 
