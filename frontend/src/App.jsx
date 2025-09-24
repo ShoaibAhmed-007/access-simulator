@@ -1,104 +1,32 @@
-// function App() {
-//   const [employees, setEmployees] = useState([]);
-//   const [results, setResults] = useState([]);
-//   const [loading, setLoading] = useState(false);
-
-//   useEffect(() => {
-//     fetch("/employees.json")
-//       .then((r) => r.json())
-//       .then(setEmployees)
-//       .catch((err) => console.error(err));
-//   }, []);
-
-//   async function handleSimulate() {
-//     setLoading(true);
-//     try {
-//       const res = await fetch("http://localhost:3000/simulate", {
-//         method: "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify(employees),
-//       });
-//       const json = await res.json();
-//       setResults(json.results || []);
-//     } catch (err) {
-//       console.error(err);
-//       alert("Simulation failed. See console.");
-//     } finally {
-//       setLoading(false);
-//     }
-//   }
-
-//   return (
-//     <div style={{ padding: 20 }}>
-//       <h2>Employee Requests</h2>
-//       <table border="1" cellPadding="6">
-//         <thead>
-//           <tr>
-//             <th>ID</th>
-//             <th>Level</th>
-//             <th>Time</th>
-//             <th>Room</th>
-//           </tr>
-//         </thead>
-//         <tbody>
-//           {employees.map((e, i) => (
-//             <tr key={i}>
-//               <td>{e.id}</td>
-//               <td>{e.access_level}</td>
-//               <td>{e.request_time}</td>
-//               <td>{e.room}</td>
-//             </tr>
-//           ))}
-//         </tbody>
-//       </table>
-
-//       <button
-//         onClick={handleSimulate}
-//         disabled={loading}
-//         style={{ marginTop: 12 }}
-//       >
-//         {loading ? "Simulating..." : "Simulate Access"}
-//       </button>
-
-//       <h2>Results</h2>
-//       <table border="1" cellPadding="6">
-//         <thead>
-//           <tr>
-//             <th>ID</th>
-//             <th>Time</th>
-//             <th>Room</th>
-//             <th>Status</th>
-//             <th>Reason</th>
-//           </tr>
-//         </thead>
-//         <tbody>
-//           {results.map((r, i) => (
-//             <tr key={i}>
-//               <td>{r.id}</td>
-//               <td>{r.request_time}</td>
-//               <td>{r.room}</td>
-//               <td>{r.status}</td>
-//               <td>{r.reason}</td>
-//             </tr>
-//           ))}
-//         </tbody>
-//       </table>
-//     </div>
-//   );
-// }
-
-import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 
 function App() {
   const [employees, setEmployees] = useState([]);
+  const [empId, setEmpId] = useState("");
+  const [reqTime, setReqTime] = useState("");
+  const [accessLvl, setAccessLvl] = useState("");
+  const [room, setRoom] = useState("");
+  const [display, setDisplay] = useState(false);
 
   useEffect(() => {
     fetch("/employees.json")
       .then((emp) => emp.json())
-      .then((res) => setEmployees(res));
+      .then((res) => {
+        setEmployees(res);
+      });
+
+    console.log(employees);
   }, []);
+
+  function addEmployee(emp) {
+    setEmployees((prev) => [...prev, emp]);
+    setEmpId("");
+    setReqTime("");
+    setRoom("");
+    setAccessLvl("");
+    setDisplay(false);
+  }
 
   return (
     <>
@@ -120,7 +48,7 @@ function App() {
               <tbody>
                 {employees.map((emp, idx) => {
                   return (
-                    <tr>
+                    <tr key={idx}>
                       <td className="border-1 text-center">{emp.id}</td>
                       <td className="border-1 text-center">
                         {emp.access_level}
@@ -134,10 +62,82 @@ function App() {
                 })}
               </tbody>
             </table>
-            <div className="">
-              <button className="text-center w-full border py-1 cursor-pointer">
+            <div>
+              <button
+                onClick={() => setDisplay(true)}
+                className={`${
+                  !display
+                    ? "text-center w-full border py-1 cursor-pointer"
+                    : "hidden"
+                }`}
+              >
                 Add Employee Data
               </button>
+              <div
+                className={`${
+                  display
+                    ? "flex flex-col items-center gap-2 py-2 border"
+                    : "hidden"
+                }`}
+              >
+                <label className="flex" htmlFor="">
+                  <p className="w-26">Employee ID:</p>{" "}
+                  <input
+                    className="border"
+                    type="text"
+                    value={empId}
+                    onChange={(e) => setEmpId(e.target.value)}
+                    name=""
+                    id=""
+                  />
+                </label>
+                <label className="flex" htmlFor="">
+                  <p className="w-26">Access Level:</p>{" "}
+                  <input
+                    className="border"
+                    type="text"
+                    value={accessLvl}
+                    onChange={(e) => setAccessLvl(e.target.value)}
+                    name=""
+                    id=""
+                  />
+                </label>
+                <label className="flex" htmlFor="">
+                  <p className="w-26">Request Time:</p>{" "}
+                  <input
+                    className="border"
+                    type="text"
+                    value={reqTime}
+                    onChange={(e) => setReqTime(e.target.value)}
+                    name=""
+                    id=""
+                  />
+                </label>
+                <label className="flex" htmlFor="">
+                  <p className="w-26">Room:</p>{" "}
+                  <input
+                    className="border"
+                    type="text"
+                    value={room}
+                    onChange={(e) => setRoom(e.target.value)}
+                    name=""
+                    id=""
+                  />
+                </label>
+                <button
+                  className="border rounded px-3 py-1"
+                  onClick={() =>
+                    addEmployee({
+                      id: empId,
+                      access_level: accessLvl,
+                      request_time: reqTime,
+                      room: room,
+                    })
+                  }
+                >
+                  Submit
+                </button>
+              </div>
             </div>
           </div>
         </div>
